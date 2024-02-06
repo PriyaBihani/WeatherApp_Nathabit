@@ -1,92 +1,24 @@
 const express = require("express");
-const Location = require("../models/location");
+const { body, param } = require("express-validator");
+const {
+  createLocation,
+  getAllLocations,
+  getLocationById,
+  updateLocation,
+  deleteLocation,
+} = require("../controllers/locations");
+const { validate, validateLocation } = require("../middlewares");
 
 const router = express.Router();
 
-// CREATE
-router.post("/", async (req, res) => {
-  try {
-    const { name } = req.body;
-
-    const locationExists = await Location.exists({ name });
-
-    if (locationExists) {
-      return res.status(400).json({
-        status: "error",
-        msg: "Location with this name already exists",
-        data: null,
-      });
-    }
-
-    const location = await Location.create({ name });
-    res.json({
-      status: "success",
-      msg: "Location created successfully",
-      data: location,
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      status: "error",
-      msg: "Internal server error",
-      data: null,
-    });
-  }
-});
-
+router.post("/", body("name"), validate, validateLocation, createLocation);
 // READ
-router.get("/", async (req, res) => {
-  try {
-    const locations = await Location.find();
-    res.json({
-      status: "success",
-      msg: "Location Fetched successfully",
-      data: locations,
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "error",
-      msg: "Internal server error",
-      data: null,
-    });
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const location = await Location.findById(req.params.id);
-    res.json({
-      status: "success",
-      msg: "Location fetched successfully",
-      data: location,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
+router.get("/", getAllLocations);
+// READ ONE
+router.get("/:id", param("id").isMongoId(), validate, getLocationById);
 // UPDATE
-router.put("/:id", async (req, res) => {
-  try {
-    const location = await Location.findByIdAndUpdate(req.params.id, req.body);
-    res.json({
-      status: "success",
-      msg: "Updated successfully",
-      data: location,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
+router.put("/:id", param("id").isMongoId(), validate, updateLocation);
 // DELETE
-router.delete("/:id", async (req, res) => {
-  try {
-    await Location.findByIdAndRemove(req.params.id);
-    res.json({ status: "success", message: "Deleted successfully" });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+router.delete("/:id", param("id").isMongoId(), validate, deleteLocation);
 
 module.exports = router;
