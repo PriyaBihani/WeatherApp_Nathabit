@@ -5,7 +5,11 @@ import { formatDate, isToday } from "../utils/date";
 const Forecast = ({ forecastData }) => {
   return (
     <div className="">
-      <h1 className="text-center text-3xl p-4">4 Day Forecast</h1>
+      {forecastData && (
+        <h2 className="text-2xl font-bold text-center mb-4">
+          Weather Forecast
+        </h2>
+      )}
       <div className="flex flex-wrap justify-center">
         {forecastData?.forecast?.forecastday.map((day, index) => (
           <div

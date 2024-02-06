@@ -1,12 +1,13 @@
 // src/components/LocationDropdown.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { BACKEND_URL } from "../utils/constants";
 
 const LocationDropdown = ({ addLocation }) => {
   const [locations, setLocations] = useState([]);
   const fetchLocations = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8000/api/locations");
+      const { data } = await axios.get(`${BACKEND_URL}/api/locations`);
       setLocations(data.data);
     } catch (error) {
       console.error("Error fetching locations", error);

@@ -48,16 +48,18 @@ const App = () => {
           Weather Forecasting
         </div>
       </nav>
-      {isLoading && <div className="text-center">Loading...</div>}
-
-      <div className="container mx-auto p-4">
-        <Locations
-          handleLocationClick={handleLocationClick}
-          selectedLocation={selectedLocation}
-          setSelectedLocation={setSelectedLocation}
-        />
-        <Forecast forecastData={forecastData} />
-      </div>
+      {isLoading ? (
+        <div className="m-5 text-center">Loading...</div>
+      ) : (
+        <div className="container mx-auto p-4">
+          <Locations
+            handleLocationClick={handleLocationClick}
+            selectedLocation={selectedLocation}
+            setSelectedLocation={setSelectedLocation}
+          />
+          <Forecast forecastData={forecastData} />
+        </div>
+      )}
     </>
   );
 };
